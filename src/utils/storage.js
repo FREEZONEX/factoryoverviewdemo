@@ -88,9 +88,15 @@ export const loadModuleLinks = () => {
   }
 };
 
+// 默认模块链接配置
+const defaultModuleLinks = {
+  'appbuilder_05': 'https://appbuilder.m3rcyzzz.club/'
+};
+
 // 获取模块链接
 export const getModuleLink = (moduleId) => {
   const links = loadModuleLinks();
-  return links[moduleId] || '';
+  // 如果用户没有配置链接，使用默认链接
+  return links[moduleId] || defaultModuleLinks[moduleId] || '';
 };
 

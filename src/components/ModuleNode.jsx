@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useDragControls } from 'framer-motion';
-import { MESIcon, WMSIcon, ProcessOptIcon, SupplyChainIcon, DefaultIcon } from './ModuleIcons';
+import { MESIcon, WMSIcon, ProcessOptIcon, SupplyChainIcon, AppbuilderIcon, DefaultIcon } from './ModuleIcons';
 import { useLanguage } from '../i18n/LanguageContext';
 
 const ModuleNode = ({ 
@@ -261,7 +261,13 @@ const ModuleNode = ({
                   color={isHovered || isSelected ? '#B2ED1D' : '#374151'} 
                 />
               )}
-              {!['MES', 'WMS', 'Process Optimization', 'Supply Chain Control Tower'].includes(module.name) && (
+              {module.name === 'Appbuilder' && (
+                <AppbuilderIcon 
+                  size={56} 
+                  color={isHovered || isSelected ? '#B2ED1D' : '#374151'} 
+                />
+              )}
+              {!['MES', 'WMS', 'Process Optimization', 'Supply Chain Control Tower', 'Appbuilder'].includes(module.name) && (
                 <DefaultIcon 
                   size={56} 
                   color={isHovered || isSelected ? '#B2ED1D' : '#374151'}

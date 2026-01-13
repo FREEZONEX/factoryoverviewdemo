@@ -14,6 +14,7 @@ export const translations = {
       WMS: "WMS",
       ProcessOptimization: "Process Optimization",
       SupplyChainControlTower: "Supply Chain Control Tower",
+      Appbuilder: "Appbuilder",
     },
     
     // Data Flow
@@ -25,6 +26,7 @@ export const translations = {
       WMS: "A warehouse system seamlessly integrated with production and operations through UNS, adaptable from pure manual warehouses to fully automated unmanned warehouses.",
       ProcessOptimization: "Process Optimization collaborates with AI to build ML algorithms that execute closed-loop control optimization, directly improving yield and quality, and predicting equipment failures and risks in advance. No coding skills required, integrates with any control system.",
       SupplyChainControlTower: "Integrate with ERP and supplier systems, even email, to precisely grasp supply chain costs, connecting production, demand, and supply.",
+      Appbuilder: "Generate fully functional industrial apps through natural language and documentation.",
     },
     
     // Popup
@@ -58,7 +60,19 @@ export const translations = {
         buildTime: "1-3 weeks",
         valueCreation: "Accurately calculate costs and delivery cycles, avoid supply chain disruptions",
         features: "Integrate with any system, adapt to enterprise-specific processes, make changes anytime"
+      },
+      Appbuilder: {
+        buildTime: "Minutes",
+        valueCreation: "Generate fully functional industrial apps through natural language and documentation",
+        features: "Not just Dashboard/UI - automatically implements complex interactive features; Auto-configures device and system integrations; UNS native - natively integrated with UNS"
       }
+    },
+    
+    // Appbuilder 特殊特点
+    appbuilderFeatures: {
+      feature1: "Not just Dashboard/UI - automatically implements complex interactive features",
+      feature2: "Auto-configures device and system integrations",
+      feature3: "UNS native - natively integrated with UNS"
     },
     openSystem: "Open System",
     configureLink: "Configure Link",
@@ -79,10 +93,12 @@ export const translations = {
       "Warehouse": "Warehouse",
       "Optimization": "Optimization",
       "Planning": "Planning",
+      "Development": "Development",
       "MES": "MES",
       "WMS": "WMS",
       "ProcessOpt": "ProcessOpt",
       "SupplyChain": "SupplyChain",
+      "Appbuilder": "Appbuilder",
     },
   },
   zh: {
@@ -99,6 +115,7 @@ export const translations = {
       WMS: "仓储管理系统",
       ProcessOptimization: "流程优化",
       SupplyChainControlTower: "供应链控制塔",
+      Appbuilder: "应用构建器",
     },
     
     // Data Flow
@@ -110,6 +127,7 @@ export const translations = {
       WMS: "通过UNS无缝与生产与运营集成的仓储系统，适配从纯手工仓库到立体自动化无人仓库。",
       ProcessOptimization: "流程优化与AI协作，构建可以执行闭环控制优化的ML算法，直接提高产量和质量，提前预测设备失效和风险。无需编码技能、和任何控制系统集成。",
       SupplyChainControlTower: "与ERP和供应商系统乃至电子邮件集成，精确掌握供应链成本，衔接生产、需求、供应。",
+      Appbuilder: "通过自然语言和文档生成全功能的工业App。",
     },
     
     // Popup
@@ -143,7 +161,19 @@ export const translations = {
         buildTime: "1-3周",
         valueCreation: "精算成本和交付周期，避免供应链中断",
         features: "与任何系统集成，适配企业的特殊流程，随时做出更改"
+      },
+      Appbuilder: {
+        buildTime: "分钟级",
+        valueCreation: "通过自然语言和文档生成全功能的工业App",
+        features: "不仅是Dashboard/UI，自动实现复杂的交互功能；自动配置和设备与系统的集成；UNS native，原生集成至UNS"
       }
+    },
+    
+    // Appbuilder 特殊特点
+    appbuilderFeatures: {
+      feature1: "不仅是Dashboard/UI，自动实现复杂的交互功能",
+      feature2: "自动配置和设备与系统的集成",
+      feature3: "UNS native，原生集成至UNS"
     },
     openSystem: "打开系统",
     configureLink: "配置链接",
@@ -164,10 +194,12 @@ export const translations = {
       "Warehouse": "仓库",
       "Optimization": "优化",
       "Planning": "规划",
+      "Development": "开发",
       "MES": "制造执行系统",
       "WMS": "仓储管理系统",
       "ProcessOpt": "流程优化",
       "SupplyChain": "供应链",
+      "Appbuilder": "应用构建器",
     },
   },
 };

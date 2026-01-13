@@ -5,7 +5,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { getModuleLink, saveModuleLink } from '../utils/storage';
 
 const ModulePopup = ({ selectedNode, onClose }) => {
-  const { t, translateUNSPath } = useLanguage();
+  const { t, translateUNSPath, language } = useLanguage();
   const selectedModule = selectedNode ? modules.find((m) => m.id === selectedNode) : null;
   const [showConfigDialog, setShowConfigDialog] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
@@ -22,6 +22,11 @@ const ModulePopup = ({ selectedNode, onClose }) => {
   const getModuleDescription = (module) => {
     const key = module.name.replace(/\s+/g, '');
     return t(`moduleDescriptions.${key}`) || t('moduleDescription', { name: getModuleName(module) });
+  };
+  
+  // 获取 Appbuilder 特殊特点的翻译
+  const getFeatureText = (feature) => {
+    return language === 'zh' ? feature.zh : feature.en;
   };
 
   // 加载模块链接
@@ -148,90 +153,150 @@ const ModulePopup = ({ selectedNode, onClose }) => {
                     </div>
                   </div>
 
-                  {/* Section 3: Metrics (Three Indicators) */}
+                  {/* Section 3: Metrics or Special Features */}
                   <div className="col-span-2">
-                    <div className="space-y-4">
-                      {/* Build Time */}
-                      <motion.div
-                        className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-200/50 p-6 shadow-sm hover:shadow-md transition-all"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                      >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-200/20 rounded-full -mr-16 -mt-16"></div>
-                        <div className="relative z-10 flex items-center gap-6">
-                          <div className="flex-shrink-0">
-                            <div className="w-12 h-12 rounded-lg bg-blue-200/30 flex items-center justify-center">
-                              <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    {selectedModule.isSpecial && selectedModule.specialFeatures ? (
+                      // Appbuilder 特殊布局 - 三个特点卡片
+                      <div className="space-y-4">
+                        {selectedModule.specialFeatures.map((feature, index) => {
+                          const colors = [
+                            { bg: 'from-blue-50 to-blue-100/50', border: 'border-blue-200/50', iconBg: 'bg-blue-200/30', text: 'text-blue-700' },
+                            { bg: 'from-neon-lime/20 to-neon-lime/10', border: 'border-neon-lime/30', iconBg: 'bg-neon-lime/30', text: 'text-gray-800' },
+                            { bg: 'from-purple-50 to-purple-100/50', border: 'border-purple-200/50', iconBg: 'bg-purple-200/30', text: 'text-purple-700' },
+                          ];
+                          const color = colors[index % 3];
+                          
+                          const icons = {
+                            sparkles: (
+                              <svg className={`w-6 h-6 ${color.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                               </svg>
+                            ),
+                            link: (
+                              <svg className={`w-6 h-6 ${color.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                              </svg>
+                            ),
+                            uns: (
+                              <svg className={`w-6 h-6 ${color.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                              </svg>
+                            ),
+                          };
+                          
+                          return (
+                            <motion.div
+                              key={feature.key}
+                              className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${color.bg} border-2 ${color.border} p-6 shadow-sm hover:shadow-md transition-all`}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.1 * (index + 1) }}
+                            >
+                              <div className="absolute top-0 right-0 w-32 h-32 bg-current opacity-5 rounded-full -mr-16 -mt-16"></div>
+                              <div className="relative z-10 flex items-center gap-6">
+                                <div className="flex-shrink-0">
+                                  <div className={`w-12 h-12 rounded-lg ${color.iconBg} flex items-center justify-center`}>
+                                    {icons[feature.icon] || icons.sparkles}
+                                  </div>
+                                </div>
+                                <div className="flex-1">
+                                  <div className={`text-sm font-semibold ${color.text} uppercase tracking-wide mb-2`}>
+                                    {language === 'zh' ? `特点 ${index + 1}` : `Feature ${index + 1}`}
+                                  </div>
+                                  <div className="text-lg font-semibold text-gray-900 leading-relaxed">
+                                    {getFeatureText(feature)}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      // 普通模块布局 - buildTime, valueCreation, features
+                      <div className="space-y-4">
+                        {/* Build Time */}
+                        <motion.div
+                          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-200/50 p-6 shadow-sm hover:shadow-md transition-all"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.1 }}
+                        >
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-200/20 rounded-full -mr-16 -mt-16"></div>
+                          <div className="relative z-10 flex items-center gap-6">
+                            <div className="flex-shrink-0">
+                              <div className="w-12 h-12 rounded-lg bg-blue-200/30 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-2">
+                                {t('buildTime')}
+                              </div>
+                              <div className="text-2xl font-bold text-blue-900">
+                                {selectedModule.metrics?.buildTime || 'N/A'}
+                              </div>
                             </div>
                           </div>
-                          <div className="flex-1">
-                            <div className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-2">
-                              {t('buildTime')}
-                            </div>
-                            <div className="text-2xl font-bold text-blue-900">
-                              {selectedModule.metrics?.buildTime || 'N/A'}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
+                        </motion.div>
 
-                      {/* Value Creation */}
-                      <motion.div
-                        className="relative overflow-hidden rounded-xl bg-gradient-to-br from-neon-lime/20 to-neon-lime/10 border-2 border-neon-lime/30 p-6 shadow-sm hover:shadow-md transition-all"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-neon-lime/20 rounded-full -mr-16 -mt-16"></div>
-                        <div className="relative z-10 flex items-start gap-6">
-                          <div className="flex-shrink-0">
-                            <div className="w-12 h-12 rounded-lg bg-neon-lime/30 flex items-center justify-center">
-                              <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                              </svg>
+                        {/* Value Creation */}
+                        <motion.div
+                          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-neon-lime/20 to-neon-lime/10 border-2 border-neon-lime/30 p-6 shadow-sm hover:shadow-md transition-all"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                        >
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-neon-lime/20 rounded-full -mr-16 -mt-16"></div>
+                          <div className="relative z-10 flex items-start gap-6">
+                            <div className="flex-shrink-0">
+                              <div className="w-12 h-12 rounded-lg bg-neon-lime/30 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">
+                                {t('valueCreation')}
+                              </div>
+                              <div className="text-base font-semibold text-gray-900 leading-relaxed">
+                                {t(`moduleMetrics.${selectedModule.name.replace(/\s+/g, '')}.valueCreation`) || selectedModule.metrics?.valueCreation || 'N/A'}
+                              </div>
                             </div>
                           </div>
-                          <div className="flex-1">
-                            <div className="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">
-                              {t('valueCreation')}
-                            </div>
-                            <div className="text-base font-semibold text-gray-900 leading-relaxed">
-                              {t(`moduleMetrics.${selectedModule.name.replace(/\s+/g, '')}.valueCreation`) || selectedModule.metrics?.valueCreation || 'N/A'}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
+                        </motion.div>
 
-                      {/* Features */}
-                      <motion.div
-                        className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-50 to-purple-100/50 border-2 border-purple-200/50 p-6 shadow-sm hover:shadow-md transition-all"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                      >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-200/20 rounded-full -mr-16 -mt-16"></div>
-                        <div className="relative z-10 flex items-start gap-6">
-                          <div className="flex-shrink-0">
-                            <div className="w-12 h-12 rounded-lg bg-purple-200/30 flex items-center justify-center">
-                              <svg className="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
+                        {/* Features */}
+                        <motion.div
+                          className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-50 to-purple-100/50 border-2 border-purple-200/50 p-6 shadow-sm hover:shadow-md transition-all"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                        >
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-200/20 rounded-full -mr-16 -mt-16"></div>
+                          <div className="relative z-10 flex items-start gap-6">
+                            <div className="flex-shrink-0">
+                              <div className="w-12 h-12 rounded-lg bg-purple-200/30 flex items-center justify-center">
+                                <svg className="w-6 h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-semibold text-purple-700 uppercase tracking-wide mb-3">
+                                {t('features')}
+                              </div>
+                              <div className="text-base text-gray-800 leading-relaxed">
+                                {t(`moduleMetrics.${selectedModule.name.replace(/\s+/g, '')}.features`) || selectedModule.metrics?.features || 'N/A'}
+                              </div>
                             </div>
                           </div>
-                          <div className="flex-1">
-                            <div className="text-sm font-semibold text-purple-700 uppercase tracking-wide mb-3">
-                              {t('features')}
-                            </div>
-                            <div className="text-base text-gray-800 leading-relaxed">
-                              {t(`moduleMetrics.${selectedModule.name.replace(/\s+/g, '')}.features`) || selectedModule.metrics?.features || 'N/A'}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
+                        </motion.div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Section 4: Open System Button */}

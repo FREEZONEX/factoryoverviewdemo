@@ -11,3 +11,4 @@ export const getAssetPath = (path) => {
   return `${normalizedBase}${normalizedPath}`;
 };
 
+

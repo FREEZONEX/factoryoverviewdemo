@@ -4,6 +4,7 @@ import {
   HiOutlineCube,          // WMS - 立方体/仓储
   HiOutlineChartBar,      // Process Optimization - 图表/优化
   HiOutlineTruck,         // Supply Chain - 卡车/物流
+  HiOutlineSparkles,      // Appbuilder - AI/生成
 } from 'react-icons/hi2';
 
 // MES - 生产制造图标
@@ -24,6 +25,11 @@ export const ProcessOptIcon = ({ size = 48, color = '#374151' }) => (
 // Supply Chain - 物流/供应链图标
 export const SupplyChainIcon = ({ size = 48, color = '#374151' }) => (
   <HiOutlineTruck size={size} color={color} />
+);
+
+// Appbuilder - AI应用构建器图标
+export const AppbuilderIcon = ({ size = 48, color = '#374151' }) => (
+  <HiOutlineSparkles size={size} color={color} />
 );
 
 // 默认图标（字母）

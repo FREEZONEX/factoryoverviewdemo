@@ -57,3 +57,4 @@ const ResizableSidebar = ({ children, defaultWidth = 35, minWidth = 25, maxWidth
 export default ResizableSidebar;
 
 
+
